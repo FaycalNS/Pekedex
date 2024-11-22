@@ -49,7 +49,27 @@ const config: Config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			pokemon: {
+				normal: '#A8A87B',
+				water: '#559EDF',
+				fire: '#EE803B',
+				grass: '#88BE5D',
+				electric: '#F7CF43',
+				ice: '#9AD8D8',
+				fight: '#BE322E',
+				poison: '#B563CE',
+				ground: '#DFBF6E',
+				flight: '#A893ED',
+				psychic: '#EC5C89',
+				bug: '#A8B732',
+				rock: '#B89F41',
+				ghost: '#705A97',
+				dark: '#705849',
+				dragon: '#7043F4',
+				steel: '#B8B9CF',
+				fairy: '#EFB7BD',
+			},
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -58,6 +78,7 @@ const config: Config = {
   		}
   	}
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 };
 export default config;
