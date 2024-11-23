@@ -11,16 +11,19 @@ export interface PokemonSprites {
 }
 
 export interface PokemonType {
-  type: {
+  pokemon_v2_type: {
+    id: number;
     name: string;
-  };
+  }[];
 }
 
 export interface PokemonStat {
-  base_stat: number;
-  stat: {
-    name: string;
-  };
+  pokemon_v2_pokemonstat:{
+    base_stat: number;
+    pokemon_v2_stat: {
+        name: string;
+    };
+  }[]
 }
 
 // GraphQL specific types
