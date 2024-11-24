@@ -18,12 +18,12 @@ export interface PokemonType {
 }
 
 export interface PokemonStat {
-  pokemon_v2_pokemonstat:{
+  pokemon_v2_pokemonstat: {
     base_stat: number;
     pokemon_v2_stat: {
-        name: string;
+      name: string;
     };
-  }[]
+  }[];
 }
 
 // GraphQL specific types
@@ -64,6 +64,30 @@ export interface PokemonDetailResponse {
     }
   ];
 }
+export interface PokemonSpeciesResponse {
+  pokemon_v2_pokemonspecies: {
+    pokemon_v2_pokemonspeciesflavortexts: {
+      flavor_text: string;
+      language: {
+        name: string;
+      };
+    }[];
+    evolution_chain_id: number;
+    pokemon_v2_pokemoncolor: {
+      name: string;
+    };
+  }[];
+}
+
+export interface EvolutionChainResponse {
+  pokemon_v2_evolutionchain: {
+    pokemon_v2_pokemonspecies: {
+      name: string;
+      id: number;
+      evolves_from_species_id: number | null;
+    }[];
+  }[];
+}
 
 // REST specific types
 export interface PokemonListRESTResponse {
@@ -82,4 +106,39 @@ export interface PokemonDetailRESTResponse {
   sprites: PokemonSprites;
   types: PokemonType[];
   stats: PokemonStat[];
+}
+export interface PokemonSpecies {
+  flavor_text_entries: {
+    flavor_text: string;
+    language: {
+      name: string;
+    };
+  }[];
+  evolution_chain: {
+    url: string;
+  };
+  color: {
+    name: string;
+  };
+}
+
+export interface EvolutionChain {
+  chain: {
+    species: {
+      name: string;
+      url: string;
+    };
+    evolves_to: {
+      species: {
+        name: string;
+        url: string;
+      };
+      evolves_to: {
+        species: {
+          name: string;
+          url: string;
+        };
+      }[];
+    }[];
+  };
 }

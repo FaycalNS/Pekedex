@@ -78,3 +78,40 @@ export const GetPokemonStats = gql`
     }
   }
 `;
+
+/**
+ * Query to fetch pokemon species details including description and color
+ * @param pokemonId - Pokemon ID
+ */
+export const GetPokemonSpecies = gql`
+  query GetPokemonSpecies($pokemonId: Int!) {
+    pokemon_v2_pokemonspecies(where: { id: { _eq: $pokemonId } }) {
+      pokemon_v2_pokemonspeciesflavortexts(
+        where: { pokemon_v2_language: { name: { _eq: "en" } } }
+        limit: 1
+      ) {
+        flavor_text
+      }
+      evolution_chain_id
+      pokemon_v2_pokemoncolor {
+        name
+      }
+    }
+  }
+`;
+
+/**
+ * Query to fetch pokemon evolution chain
+ * @param evolutionChainId - Evolution Chain ID
+ */
+export const GetEvolutionChain = gql`
+  query GetEvolutionChain($evolutionChainId: Int!) {
+    pokemon_v2_evolutionchain(where: { id: { _eq: $evolutionChainId } }) {
+      pokemon_v2_pokemonspecies {
+        name
+        id
+        evolves_from_species_id
+      }
+    }
+  }
+`;

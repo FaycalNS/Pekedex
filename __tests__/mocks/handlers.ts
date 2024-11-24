@@ -84,4 +84,46 @@ export const handlers = [
       },
     });
   }),
+
+  graphql.query("GetPokemonSpecies", () => {
+    return HttpResponse.json({
+      data: {
+        pokemon_v2_pokemonspecies: [{
+          pokemon_v2_pokemonspeciesflavortexts: [{
+            flavor_text: "A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON."
+          }],
+          evolution_chain_id: 1,
+          pokemon_v2_pokemoncolor: {
+            name: "green"
+          }
+        }]
+      }
+    });
+  }),
+
+  graphql.query("GetEvolutionChain", () => {
+    return HttpResponse.json({
+      data: {
+        pokemon_v2_evolutionchain: [{
+          pokemon_v2_pokemonspecies: [
+            {
+              name: "bulbasaur",
+              id: 1,
+              evolves_from_species_id: null
+            },
+            {
+              name: "ivysaur",
+              id: 2,
+              evolves_from_species_id: 1
+            },
+            {
+              name: "venusaur",
+              id: 3,
+              evolves_from_species_id: 2
+            }
+          ]
+        }]
+      }
+    });
+  })
 ];

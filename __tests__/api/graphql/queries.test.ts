@@ -2,23 +2,27 @@
 import { describe, it, expect } from "vitest";
 import client from "@/lib/api/graphql/client";
 import {
-    GetPokemons,
-    GetPokemonByIdOrName,
-    GetPokemonTypes,
-    GetPokemonStats,
+  GetPokemons,
+  GetPokemonByIdOrName,
+  GetPokemonTypes,
+  GetPokemonStats,
+  GetPokemonSpecies,
+  GetEvolutionChain,
 } from "@/lib/api/graphql/queries/";
-import { 
-    PokemonListResponse, 
-    PokemonDetailResponse, 
-    PokemonType,
-    PokemonStat 
+import {
+  PokemonListResponse,
+  PokemonDetailResponse,
+  PokemonType,
+  PokemonStat,
+  PokemonSpeciesResponse,
+  EvolutionChainResponse,
 } from "@/types/pokemon";
 
 describe("Pokemon Queries", () => {
   // GetPokemons Tests
   describe("GetPokemons", () => {
     it("should fetch pokemon list successfully", async () => {
-        const { data } = await client.query<PokemonListResponse>({
+      const { data } = await client.query<PokemonListResponse>({
         query: GetPokemons,
         variables: { limit: 1, offset: 0 },
       });
@@ -101,6 +105,54 @@ describe("Pokemon Queries", () => {
       } catch (error: any) {
         expect(error.message).toBe("Invalid Pokemon ID");
       }
+    });
+  });
+
+  // GetPokemonSpecies Tests
+  describe("GetPokemonSpecies", () => {
+    it("should fetch pokemon species successfully", async () => {
+      const { data } = await client.query<PokemonSpeciesResponse>({
+        query: GetPokemonSpecies,
+        variables: { pokemonId: 1 },
+      });
+
+      expect(data.pokemon_v2_pokemonspecies[0]).toMatchObject({
+        pokemon_v2_pokemonspeciesflavortexts: [
+          {
+            flavor_text: expect.any(String),
+          },
+        ],
+        evolution_chain_id: expect.any(Number),
+        pokemon_v2_pokemoncolor: {
+          name: expect.any(String),
+        },
+      });
+    });
+  });
+
+  // GetEvolutionChain Tests
+  describe("GetEvolutionChain", () => {
+    it("should fetch evolution chain successfully", async () => {
+      const { data } = await client.query<EvolutionChainResponse>({
+        query: GetEvolutionChain,
+        variables: { evolutionChainId: 1 },
+      });
+
+      expect(data.pokemon_v2_evolutionchain[0]).toBeDefined();
+      expect(
+        data.pokemon_v2_evolutionchain[0].pokemon_v2_pokemonspecies
+      ).toHaveLength(3);
+      expect(
+        data.pokemon_v2_evolutionchain[0].pokemon_v2_pokemonspecies
+      ).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: expect.any(String),
+            id: expect.any(Number),
+            evolves_from_species_id: expect.any(Number) || null,
+          }),
+        ])
+      );
     });
   });
 });
