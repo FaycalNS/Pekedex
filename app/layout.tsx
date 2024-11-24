@@ -1,7 +1,12 @@
 import ApolloProvider from "@/components/ApolloProvider";
 import type { Metadata } from "next";
-import "./globals.css";
 
+import { Roboto } from 'next/font/google'
+import "./globals.css";
+const roboto = Roboto({
+  weight: ['100','300','400','500', '700','900'],
+  subsets: ['latin'],
+})
 
 
 export const metadata: Metadata = {
@@ -16,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={roboto.className}>
         <ApolloProvider>{children}</ApolloProvider>
       </body>
     </html>

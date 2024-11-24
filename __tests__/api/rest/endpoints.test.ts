@@ -6,7 +6,7 @@ import {
   getRandomPokemon,
   getPokemonSpecies,
   getEvolutionChain
-} from '@/lib/api/rest/endpoints/pokemon';
+} from '@/lib/api/rest/endpoints';
 import type {
   Pokemon,
   PokemonListRESTResponse,
