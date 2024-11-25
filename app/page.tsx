@@ -1,6 +1,11 @@
-"use client";
+import type { Metadata } from "next";
 import SearchCard from "@/components/pokemon/search-card";
 
+export const metadata: Metadata = {
+  title: "Search Pokemon - Pokedex",
+  description:
+    "Find your favorite Pokemon by name or ID. Explore Pokemon details, stats, and more.",
+};
 export default function Home() {
   return (
     <main className="min-h-screen relative overflow-hidden">

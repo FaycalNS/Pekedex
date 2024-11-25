@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 import { useState } from "react";
 import { Roboto } from "next/font/google";
 import { useRouter } from "next/navigation";
