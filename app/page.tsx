@@ -34,10 +34,7 @@ export default function Home() {
             bg-contain bg-no-repeat bg-right-bottom"
         />
 
-        <SearchCard
-          onSearch={(query) => console.log("Search:", query)}
-          onRandom={() => console.log("Random")}
-        />
+        <SearchCard />
       </div>
     </main>
   );

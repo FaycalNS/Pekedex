@@ -28,7 +28,7 @@ export const GetPokemons = gql`
  * @param name - Pokemon name
  */
 export const GetPokemonByIdOrName = gql`
-  query GetPokemonByIdOrName($id: Int, $name: String) {
+  query GetPokemonByIdOrName($name: String = "", $id: Int = -1) {
     pokemon_v2_pokemon(
       where: { _or: [{ id: { _eq: $id } }, { name: { _eq: $name } }] }
     ) {

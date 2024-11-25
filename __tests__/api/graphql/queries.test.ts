@@ -43,7 +43,7 @@ describe("Pokemon Queries", () => {
     it("should fetch pokemon by name successfully", async () => {
       const { data } = await client.query<PokemonDetailResponse>({
         query: GetPokemonByIdOrName,
-        variables: { name: "bulbasaur" },
+        variables: { name: "bulbasaur" }  // id will use default -1
       });
 
       expect(data.pokemon_v2_pokemon[0]).toMatchObject({
@@ -52,10 +52,22 @@ describe("Pokemon Queries", () => {
       });
     });
 
-    it("should return empty array for nonexistent pokemon", async () => {
+    it("should fetch pokemon by id successfully", async () => {
       const { data } = await client.query<PokemonDetailResponse>({
         query: GetPokemonByIdOrName,
-        variables: { name: "nonexistent" },
+        variables: { id: 1 }  // name will use default ""
+      });
+
+      expect(data.pokemon_v2_pokemon[0]).toMatchObject({
+        id: 1,
+        name: "bulbasaur",
+      });
+    });
+
+    it("should handle non-existent pokemon", async () => {
+      const { data } = await client.query({
+        query: GetPokemonByIdOrName,
+        variables: { name: "nonexistent" }
       });
 
       expect(data.pokemon_v2_pokemon).toHaveLength(0);
