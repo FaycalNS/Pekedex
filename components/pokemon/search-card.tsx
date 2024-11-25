@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState } from "react";
-import { Roboto } from "next/font/google";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -16,11 +15,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { searchFormSchema } from "@/schemas";
 import { LoadingSpinner } from "@/app/loading-spinner";
-
-const roboto = Roboto({
- weight: ["100", "300", "400", "500", "700", "900"],
- subsets: ["latin"],
-});
 
 
 type SearchFormValues = z.infer<typeof searchFormSchema>;
@@ -51,8 +45,8 @@ export default function SearchCard() {
      if (!pokemonData?.pokemon_v2_pokemon || !pokemonData.pokemon_v2_pokemon[0]) {
        throw new Error('Pokemon not found');
      }
-     console.log("Pokemon :", pokemonData.pokemon_v2_pokemon[0]);
-     //router.push(`/pokemon/${pokemonData.pokemon_v2_pokemon[0].name}`);
+     //console.log("Pokemon :", pokemonData.pokemon_v2_pokemon[0]);
+     router.push(`/pokemon/${pokemonData.pokemon_v2_pokemon[0].name}`);
    } catch (error) {
      console.error('Search error:', error);
      toast({
@@ -73,8 +67,8 @@ export default function SearchCard() {
        variables: { id: randomId }
      });
      if (data?.pokemon_v2_pokemon[0]) {
-       console.log("Random Pokemon :", data);
-       //router.push(`/pokemon/${data.pokemon_v2_pokemon[0].name}`);
+       //console.log("Random Pokemon :", data);
+       router.push(`/pokemon/${data.pokemon_v2_pokemon[0].name}`);
      }
    } catch (error) {
      toast({
@@ -103,14 +97,15 @@ export default function SearchCard() {
        </CardHeader>
        <form onSubmit={handleSubmit(onSubmit)}>
          <CardContent className="space-y-2 p-0 pb-[34px]">
-           <label className="text-themeTextColor text-base font-bold">
-             Pokemon Name or Id
-           </label>
-           <Input
-             {...register("query")}
-             disabled={isSearchLoading || isRandomLoading}
-             className="w-full h-[60px] rounded-[5px] border-[#CFC7C2] bg-[#FAFAFA] focus:border-themeBgColor focus:ring-themeBgColor"
-           />
+            <label htmlFor="pokemon-search" className="text-themeTextColor text-base font-bold">
+              Pokemon Name or Id
+            </label>
+            <Input
+                id="pokemon-search"
+              {...register("query")}
+              disabled={isSearchLoading || isRandomLoading}
+              className="w-full h-[60px] rounded-[5px] border-[#CFC7C2] bg-[#FAFAFA] focus:border-themeBgColor focus:ring-themeBgColor"
+            />
            {errors.query && (
              <span className="text-themeMainColor text-sm">{errors.query.message}</span>
            )}
@@ -119,8 +114,8 @@ export default function SearchCard() {
             <Button
               type="submit"
               disabled={isSearchLoading || isRandomLoading}
-              className={`${roboto.className} w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
-                text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]`}
+              className="w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
+                text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]"
             >
               {isSearchLoading ? <LoadingSpinner color="white" size={4} /> : 'Search'}
             </Button>
@@ -128,8 +123,8 @@ export default function SearchCard() {
               type="button"
               onClick={handleRandom}
               disabled={isSearchLoading || isRandomLoading}
-              className={`${roboto.className} w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
-                text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]`}
+              className="w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
+                text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]"
             >
               {isRandomLoading ? <LoadingSpinner color="white" size={4} />: 'Random'}
             </Button>
