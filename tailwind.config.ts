@@ -44,6 +44,7 @@ const config: Config = {
 			themeBgColor: "#ff5754",
 			themeBorder: "#585858",
 			themeTextColor: "#767676",
+			themeeTitleColor: "#4F4F4F",
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
