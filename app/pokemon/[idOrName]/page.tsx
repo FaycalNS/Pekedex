@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { getPokemonTypeColor } from "@/lib/utils/color-utils";
+import { getPokemonData } from "@/lib/utils/pokemon-utils";
 import PokemonDetail from "@/components/pokemon/pokemonDetail";
 
 export const metadata: Metadata = {
@@ -6,6 +8,21 @@ export const metadata: Metadata = {
   description: 'View detailed information about Pokemon including stats, evolutions, and moves.',
 };
 
-export default function PokemonDetailPage() {
-  return <PokemonDetail />;
+interface Props {
+  params: { idOrName: string }
+}
+
+export default async function PokemonPage({ params }: Props) {
+  const [initialType, initialData] = await Promise.all([
+    getPokemonTypeColor(params.idOrName),
+    getPokemonData(params.idOrName)
+  ]);
+  
+  return( 
+    <PokemonDetail 
+      idOrName={params.idOrName} 
+      initialType={initialType} 
+      initialData={initialData}
+    />
+  );
 }
