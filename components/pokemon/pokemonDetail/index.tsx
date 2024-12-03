@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import Image from "next/image";
@@ -6,10 +7,12 @@ import Header from "./header";
 import TabsSection from "./tabsSection";
 import { motion } from "framer-motion";
 import { Abel } from "next/font/google";
-import { useQuery } from "@apollo/client";
-import { GetPokemonByIdOrName } from "@/lib/api/graphql/queries";
-import { PokemonDetailResponse } from "@/types/pokemon";
-import { LoadingSpinner } from "@/components/loading-spinner";
+import type { 
+  PokemonDetailResponse, 
+  PokemonSpeciesResponse, 
+  EvolutionChainResponse 
+} from "@/types/pokemon";
+import { useMemo } from "react";
 
 const abel = Abel({
   weight: ["400"],
@@ -19,36 +22,51 @@ const abel = Abel({
 interface PokemonDetailProps {
   idOrName: string;
   initialType: string;
-  initialData: PokemonDetailResponse['pokemon_v2_pokemon'][0] | null;
+  initialData: PokemonDetailResponse['pokemon_v2_pokemon'][0];
+  initialSpecies: PokemonSpeciesResponse['pokemon_v2_pokemonspecies'][0] | null;
+  initialEvolution: EvolutionChainResponse['pokemon_v2_evolutionchain'][0] | null;
 }
 
 export default function PokemonDetail({
   idOrName,
   initialType,
   initialData,
+  initialSpecies,
+  initialEvolution,
 }: PokemonDetailProps) {
-  const isId = /^\d+$/.test(idOrName);
-
-  const { data, loading } = useQuery<PokemonDetailResponse>(
-    GetPokemonByIdOrName,
-    {
-      variables: isId
-        ? { id: parseInt(idOrName) }
-        : { name: idOrName.toLowerCase() },
-      skip: !!(initialData && initialType), // Skip if we have both initial values
+  const {
+    spriteUrl,
+    description
+  } = useMemo(() => {
+    // Get sprite URL
+    let derivedSpriteUrl = '';
+    if (initialData?.pokemon_v2_pokemonsprites?.[0]?.sprites) {
+      try {
+        const spritesData = typeof initialData.pokemon_v2_pokemonsprites[0].sprites === 'string'
+          ? JSON.parse(initialData.pokemon_v2_pokemonsprites[0].sprites)
+          : initialData.pokemon_v2_pokemonsprites[0].sprites;
+        
+        derivedSpriteUrl = spritesData?.other?.['official-artwork']?.front_default ||
+                          `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${initialData.id}.png`;
+      } catch (error) {
+        derivedSpriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${initialData.id}.png`;
+      }
     }
-  );
 
-  const pokemon = initialData || data?.pokemon_v2_pokemon[0];
-  const typeColor = initialType || pokemon?.pokemon_v2_pokemontypes[0]?.pokemon_v2_type.name || "normal";
+    // Get description
+    const englishDescription = initialSpecies?.pokemon_v2_pokemonspeciesflavortexts[0].flavor_text as string;
 
-  console.log("MainType :", initialType);
-  console.log("Pokemon :", pokemon);
+    return {
+      spriteUrl: derivedSpriteUrl,
+      description: englishDescription
+    };
+  }, [initialData, initialSpecies]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`min-h-screen transition-colors duration-100 bg-pokemon-${typeColor} px-5`}
+      className={`min-h-screen transition-colors duration-100 bg-pokemon-${initialType} px-5`}
     >
       <div className="w-full min-h-svh max-w-[1196px] mx-auto flex flex-col justify-start items-center gap-[30px] sm:gap-[47px] md:gap-[77px]">
         <motion.div
@@ -77,16 +95,17 @@ export default function PokemonDetail({
           transition={{ delay: 0.3 }}
           className={`${abel.className} w-full flex-1 rounded-t-[48px] bg-white flex flex-col justify-start items-center gap-[40px] sm:gap-[60px] rounded-b-none px-5 shadow-none border-b-0`}
         >
-          {loading ? (
-            <div className="min-h-screen flex items-center justify-center">
-              <LoadingSpinner color={`pokemon-${typeColor}`} size={8} />
-            </div>
-          ) : (
-            <>
-              <Header />
-              <TabsSection />
-            </>
-          )}
+          <Header 
+            name={initialData.name}
+            types={initialData.pokemon_v2_pokemontypes}
+            description={description}
+            spriteUrl={spriteUrl}
+          />
+          <TabsSection 
+            stats={initialData.pokemon_v2_pokemonstats}
+            mainType={initialType}
+            evolutionChain={initialEvolution?.pokemon_v2_pokemonspecies ?? []}
+          />
         </motion.div>
       </div>
     </motion.div>

@@ -20,7 +20,7 @@ import client from "@/lib/api/graphql/client";
 const mockPokemonData: PokemonDetailResponse["pokemon_v2_pokemon"][0] = {
   id: 1,
   name: "bulbasaur",
-  pokemon_v2_pokemonsprites: [{ sprites: '{"front_default": "sprite-url"}' }],
+  pokemon_v2_pokemonsprites: [{ sprites: '{"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"}' }],
   pokemon_v2_pokemontypes: [{ pokemon_v2_type: { name: "grass" } }],
   pokemon_v2_pokemonstats: [{ base_stat: 45, pokemon_v2_stat: { name: "hp" } }],
 };

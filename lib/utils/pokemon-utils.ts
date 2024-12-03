@@ -1,6 +1,14 @@
 import client from "@/lib/api/graphql/client";
-import { GetPokemonByIdOrName } from "@/lib/api/graphql/queries";
-import { PokemonDetailResponse } from "@/types/pokemon";
+import { 
+  GetPokemonByIdOrName, 
+  GetPokemonSpecies, 
+  GetEvolutionChain 
+} from "@/lib/api/graphql/queries";
+import type { 
+  PokemonDetailResponse, 
+  PokemonSpeciesResponse, 
+  EvolutionChainResponse 
+} from "@/types/pokemon";
 
 export async function getPokemonData(idOrName: string) {
   const isId = /^\d+$/.test(idOrName);
@@ -14,6 +22,32 @@ export async function getPokemonData(idOrName: string) {
     });
 
     return data?.pokemon_v2_pokemon[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getPokemonSpecies(pokemonId: number) {
+  try {
+    const { data } = await client.query<PokemonSpeciesResponse>({
+      query: GetPokemonSpecies,
+      variables: { pokemonId },
+    });
+
+    return data?.pokemon_v2_pokemonspecies[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getEvolutionChain(evolutionChainId: number) {
+  try {
+    const { data } = await client.query<EvolutionChainResponse>({
+      query: GetEvolutionChain,
+      variables: { evolutionChainId },
+    });
+
+    return data?.pokemon_v2_evolutionchain[0] ?? null;
   } catch {
     return null;
   }

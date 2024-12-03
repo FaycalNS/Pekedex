@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --tab-color: transparent;
+}
 
+[data-state="active"] {
+  --tab-color: var(--pokemon-color);
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
