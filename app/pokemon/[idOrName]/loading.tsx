@@ -8,6 +8,7 @@ export default function Loading() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen transition-colors duration-100 bg-gray-100 px-5"
+      role="status"
     >
       <div className="w-full min-h-svh max-w-[1196px] mx-auto flex items-center justify-center">
         <LoadingSpinner color="themeMainColor" size={8} />

@@ -68,9 +68,6 @@ export interface PokemonSpeciesResponse {
   pokemon_v2_pokemonspecies: {
     pokemon_v2_pokemonspeciesflavortexts: {
       flavor_text: string;
-      language: {
-        name: string;
-      };
     }[];
     evolution_chain_id: number;
     pokemon_v2_pokemoncolor: {

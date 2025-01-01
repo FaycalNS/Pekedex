@@ -39,6 +39,7 @@ export default function StatsTab({ stats, mainType }: StatsTabProps) {
             value={stat.base_stat}
             className="bg-[#F0F0F0] transition-all duration-1000 w-full"
             indicatorColor={`bg-pokemon-${mainType}`}
+            aria-valuenow={stat.base_stat}
           />
         </motion.div>
       ))}
