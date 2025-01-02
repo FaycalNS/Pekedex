@@ -31,7 +31,7 @@ export default function StatsTab({ stats, mainType }: StatsTabProps) {
             <span className={`text-pokemon-${mainType} min-w-[30px] text-left`}>
               {STAT_NAMES[stat.pokemon_v2_stat.name as keyof typeof STAT_NAMES]}
             </span>
-            <span className="w-fit sm:min-w-[30px] text-right text-[#666666] text-sm">
+            <span className="min-w-[25px] sm:min-w-[30px] text-right text-[#666666] text-sm">
               {stat.base_stat}
             </span>
           </div>
