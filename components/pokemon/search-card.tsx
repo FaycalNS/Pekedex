@@ -12,20 +12,17 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 
-
-import { useToast } from "@/hooks/use-toast";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { searchFormSchema } from "@/schemas";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { searchPokemon, getRandomPokemon } from "@/lib/utils/pokemon-utils";
+import { motion } from "framer-motion";
 
 type SearchFormValues = z.infer<typeof searchFormSchema>;
 
 export default function SearchCard() {
-  const { toast } = useToast();
   const router = useRouter();
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isRandomLoading, setIsRandomLoading] = useState(false);
@@ -44,15 +41,12 @@ export default function SearchCard() {
     try {
       const pokemon = await searchPokemon(data.query);
       if (!pokemon) {
-        throw new Error("Pokemon not found");
+        router.push('/not-found');
+        return;
       }
       router.push(`/pokemon/${pokemon.name}`);
     } catch (error) {
-      toast({
-        title: "Pokemon not found",
-        description: "Please try another name or ID",
-        variant: "destructive",
-      });
+      router.push('/not-found');
     } finally {
       setIsSearchLoading(false);
     }
@@ -62,25 +56,38 @@ export default function SearchCard() {
     setIsRandomLoading(true);
     try {
       const pokemon = await getRandomPokemon();
-      if (pokemon) {
-        router.push(`/pokemon/${pokemon.name}`);
+      if (!pokemon) {
+        router.push('/not-found');
+        return;
       }
+      router.push(`/pokemon/${pokemon.name}`);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to get random Pokemon. Please try again.",
-        variant: "destructive",
-      });
+      router.push('/not-found');
     } finally {
       setIsRandomLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-[428px] mx-auto md:mx-0 z-40">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3, duration: 0.5 }}
+      className="w-full max-w-[428px] mx-auto md:mx-0 z-40"
+    >
       <Card className="py-4 px-6 sm:py-10 sm:px-[60px] bg-white border-[2px] border-themeBorder rounded-[10px]">
         <CardHeader className="flex items-center justify-center p-0 pb-4">
-          <div className="relative w-[94px] h-[92px]">
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ 
+              delay: 0.5,
+              type: "spring",
+              stiffness: 260,
+              damping: 20 
+            }}
+            className="relative w-[94px] h-[92px]"
+          >
             <Image
               src="/assets/images/pokeball.svg"
               alt="Pokeball"
@@ -88,16 +95,24 @@ export default function SearchCard() {
               className="object-contain"
               priority
             />
-          </div>
+          </motion.div>
         </CardHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <motion.form 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <CardContent className="space-y-2 p-0 pb-[34px]">
-            <label
+            <motion.label
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.7 }}
               htmlFor="pokemon-search"
               className="text-themeTextColor text-base font-bold"
             >
               Pokemon Name or Id
-            </label>
+            </motion.label>
             <Input
               id="pokemon-search"
               {...register("query")}
@@ -105,40 +120,56 @@ export default function SearchCard() {
               className="w-full h-[60px] rounded-[5px] border-[#CFC7C2] bg-[#FAFAFA] focus:border-themeBgColor focus:ring-themeBgColor"
             />
             {errors.query && (
-              <span className="text-themeMainColor text-sm">
+              <motion.span 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-themeMainColor text-sm"
+              >
                 {errors.query.message}
-              </span>
+              </motion.span>
             )}
           </CardContent>
           <CardFooter className="w-full flex flex-col sm:flex-row gap-3 justify-between items-center p-0">
-            <Button
-              type="submit"
-              disabled={isSearchLoading || isRandomLoading}
-              className="w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
-                text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]"
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8 }}
             >
-              {isSearchLoading ? (
-                <LoadingSpinner color="white" size={4} />
-              ) : (
-                "Search"
-              )}
-            </Button>
-            <Button
-              type="button"
-              onClick={handleRandomSearch}
-              disabled={isSearchLoading || isRandomLoading}
-              className="w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
-                text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]"
+              <Button
+                type="submit"
+                disabled={isSearchLoading || isRandomLoading}
+                className="w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
+                  text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]"
+              >
+                {isSearchLoading ? (
+                  <LoadingSpinner color="white" size={4} />
+                ) : (
+                  "Search"
+                )}
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.9 }}
             >
-              {isRandomLoading ? (
-                <LoadingSpinner color="white" size={4} />
-              ) : (
-                "Random"
-              )}
-            </Button>
+              <Button
+                type="button"
+                onClick={handleRandomSearch}
+                disabled={isSearchLoading || isRandomLoading}
+                className="w-full sm:w-auto sm:min-w-[116px] bg-themeMainColor hover:bg-themeBgColor/90 
+                  text-white font-bold text-sm rounded-[5px] py-5 px-7 leading-[18px]"
+              >
+                {isRandomLoading ? (
+                  <LoadingSpinner color="white" size={4} />
+                ) : (
+                  "Random"
+                )}
+              </Button>
+            </motion.div>
           </CardFooter>
-        </form>
+        </motion.form>
       </Card>
-    </div>
+    </motion.div>
   );
 }
