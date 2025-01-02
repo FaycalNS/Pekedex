@@ -66,23 +66,19 @@ describe("Search Integration", () => {
   });
 });
 
- it("should handle search errors correctly", async () => {
-   vi.mocked(searchPokemon).mockResolvedValueOnce(null);
+it("should handle search errors correctly", async () => {
+  vi.mocked(searchPokemon).mockResolvedValueOnce(null);
 
-   render(
-     <WrapperWithToast>
-       <App />
-     </WrapperWithToast>
-   );
+  render(<App />);
 
-   const input = screen.getByLabelText(/pokemon name or id/i);
-   await userEvent.type(input, "nonexistent");
-   await userEvent.click(screen.getByRole("button", { name: /search/i }));
+  const input = screen.getByLabelText(/pokemon name or id/i);
+  await userEvent.type(input, "nonexistent");
+  await userEvent.click(screen.getByRole("button", { name: /search/i }));
 
-   await waitFor(() => {
-     expect(screen.getByText("Pokemon not found")).toBeInTheDocument();
-   });
- });
+  await waitFor(() => {
+      expect(useRouter().push).toHaveBeenCalledWith('/not-found');
+  });
+});
 
  it("should handle random pokemon search", async () => {
    vi.mocked(getRandomPokemon).mockResolvedValueOnce(mockPokemonData);
