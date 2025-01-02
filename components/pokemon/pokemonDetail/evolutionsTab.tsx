@@ -17,18 +17,20 @@ export default function EvolutionsTab({ evolutionChain, mainType }: EvolutionsTa
       animate={{ opacity: 1, y: 0 }}
     >
       {sortedEvolutions.map((pokemon, index) => (
+        <>
+        {index > 0 && (
+          <svg
+            className={`stroke-pokemon-${mainType} sm:w-24 h-3 rotate-90 sm:rotate-0`}
+            viewBox="0 0 98 12"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M2 6H95.0388" strokeWidth="4" strokeLinecap="round" />
+            <path d="M91.5 2.28744L95.0388 6" strokeWidth="4" strokeLinecap="round" />
+            <path d="M91.5 9.28744L95.0388 6" strokeWidth="4" strokeLinecap="round" />
+          </svg>
+        )}
         <div key={pokemon.id} className="flex items-center">
-          {index > 0 && (
-            <svg
-              className={`stroke-pokemon-${mainType} sm:w-24 h-3 rotate-90 sm:rotate-0`}
-              viewBox="0 0 98 12"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M2 6H95.0388" strokeWidth="4" strokeLinecap="round" />
-              <path d="M91.5 2.28744L95.0388 6" strokeWidth="4" strokeLinecap="round" />
-              <path d="M91.5 9.28744L95.0388 6" strokeWidth="4" strokeLinecap="round" />
-            </svg>
-          )}
+          
           <motion.div
             className="flex flex-col justify-center items-center gap-3"
             initial={{ scale: 0.8, opacity: 0 }}
@@ -47,6 +49,7 @@ export default function EvolutionsTab({ evolutionChain, mainType }: EvolutionsTa
             <span className="text-[36px] text-black capitalize">{pokemon.name}</span>
           </motion.div>
         </div>
+        </>
       ))}
     </motion.div>
   );

@@ -134,6 +134,7 @@ export default function SearchCard() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
+              className="w-full sm:w-auto"
             >
               <Button
                 type="submit"
@@ -152,6 +153,7 @@ export default function SearchCard() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.9 }}
+              className="w-full sm:w-auto"
             >
               <Button
                 type="button"
