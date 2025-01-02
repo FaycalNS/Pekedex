@@ -1,12 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useDebounce } from "@/hooks/useDebounce";
+import Pokeball from "@/public/assets/images/Pokeball.svg"
 import {
   Card,
   CardContent,
@@ -21,40 +20,22 @@ import { searchFormSchema } from "@/schemas";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { searchPokemon, getRandomPokemon } from "@/lib/utils/pokemon-utils";
 import { motion } from "framer-motion";
-import Pokeball from "@/public/assets/images/Pokeball.svg"
+
 type SearchFormValues = z.infer<typeof searchFormSchema>;
 
 export default function SearchCard() {
   const router = useRouter();
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isRandomLoading, setIsRandomLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearch = useDebounce(searchTerm, 300);
-  
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch
   } = useForm<SearchFormValues>({
     resolver: zodResolver(searchFormSchema),
     mode: "onChange",
   });
-
-  useEffect(() => {
-    const subscription = watch((value) => {
-      if (value.query) {
-        setSearchTerm(value.query);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [watch]);
-
-  useEffect(() => {
-    if (debouncedSearch) {
-      onSubmit({ query: debouncedSearch });
-    }
-  }, [debouncedSearch]);
 
   const onSubmit = async (data: SearchFormValues) => {
     setIsSearchLoading(true);
@@ -71,7 +52,7 @@ export default function SearchCard() {
       setIsSearchLoading(false);
     }
   };
-  
+
   const handleRandomSearch = async () => {
     setIsRandomLoading(true);
     try {
