@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -23,20 +23,59 @@ import { motion } from "framer-motion";
 
 type SearchFormValues = z.infer<typeof searchFormSchema>;
 
-export default function SearchCard() {
+interface SearchCardProps {
+  defaultStates?: {
+    isSearchLoading?: boolean;
+    isRandomLoading?: boolean;
+    inputValue?: string;
+    showError?: boolean;
+    autoFocus?: boolean;
+  };
+}
+export default function SearchCard({ defaultStates }: SearchCardProps = {}) {
   const router = useRouter();
-  const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [isRandomLoading, setIsRandomLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isSearchLoading, setIsSearchLoading] = useState(defaultStates?.isSearchLoading ?? false);
+  const [isRandomLoading, setIsRandomLoading] = useState(defaultStates?.isRandomLoading ?? false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    setError
   } = useForm<SearchFormValues>({
     resolver: zodResolver(searchFormSchema),
     mode: "onChange",
   });
 
+  // Create a ref callback
+  const setRefs = (element: HTMLInputElement | null) => {
+    (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = element;
+    const { ref } = register('query');
+    if (typeof ref === 'function') {
+      ref(element);
+    }
+  };
+
+  useEffect(() => {
+    if (defaultStates?.inputValue) {
+      setValue('query', defaultStates.inputValue);
+    }
+    if (defaultStates?.showError) {
+      setError('query', {
+        type: 'manual',
+        message: 'Please enter a valid Pokemon name or ID'
+      });
+    }
+  }, [defaultStates, setValue, setError]);
+
+  useEffect(() => {
+    if (defaultStates?.autoFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [defaultStates?.autoFocus]);
+  
   const onSubmit = async (data: SearchFormValues) => {
     setIsSearchLoading(true);
     try {
@@ -117,6 +156,7 @@ export default function SearchCard() {
             <Input
               id="pokemon-search"
               {...register("query")}
+              ref={setRefs}
               disabled={isSearchLoading || isRandomLoading}
               className="w-full h-[60px] rounded-[5px] border-[#CFC7C2] bg-[#FAFAFA] focus:border-themeBgColor focus:ring-themeBgColor"
             />

@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
-import '../app/globals.css'; // Your tailwind styles
+import { withApollo } from '../stories/mocks/apolloMock';
+import '../app/globals.css';
 
 const preview: Preview = {
   parameters: {
@@ -14,6 +15,7 @@ const preview: Preview = {
       appDirectory: true,
     },
   },
+  decorators: [withApollo],
 };
 
 export default preview;
